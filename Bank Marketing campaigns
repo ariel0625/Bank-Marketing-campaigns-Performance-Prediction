@@ -1,0 +1,364 @@
+(1)Select a dataset that interests you
+Describe the dataset you chose. Why did you choose it? 
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline  
+
+I select the dataset of Bank Marketing Data Set with direct marketing campaigns of a Portuguese banking institution.
+This is because I am interested in what the variables that the bank would choose to evaluate their performance of 
+campaigns.Besides, how the bank define variables to predict their campaign performance also interests me.    
+
+
+marketing_df= pd.read_csv('/Users/leechenhsin/Desktop/Study@USA/07_UW_School/IMT574/bank_new.csv')
+marketing_df
+
+
+What features does it include? 
+#The dataset includes:
+
+## bank client data:
+#1 - age (numeric)
+#2 - job : type of job (categorical: 'admin.','blue-collar','entrepreneur','housemaid','management','retired','self-employed','services','student','technician','unemployed','unknown')
+#3 - marital : marital status (categorical: 'divorced','married','single','unknown'; note: 'divorced' means divorced or widowed)
+#4 - education (categorical: 'basic.4y','basic.6y','basic.9y','high.school','illiterate','professional.course','university.degree','unknown')
+#5 - default: has credit in default? (categorical: 'no','yes','unknown')
+#6 - housing: has housing loan? (categorical: 'no','yes','unknown')
+#7 - loan: has personal loan? (categorical: 'no','yes','unknown')
+# related with the last contact of the current campaign:
+#8 - contact: contact communication type (categorical: 'cellular','telephone')
+#9 - month: last contact month of year (categorical: 'jan', 'feb', 'mar', ..., 'nov', 'dec')
+#10 - day_of_week: last contact day of the week (categorical: 'mon','tue','wed','thu','fri')
+#11 - duration: last contact duration, in seconds (numeric). Important note: this attribute highly affects the output target (e.g., if duration=0 then y='no'). Yet, the duration is not known before a call is performed. Also, after the end of the call y is obviously known. Thus, this input should only be included for benchmark purposes and should be discarded if the intention is to have a realistic predictive model.
+
+# other attributes:
+#12 - campaign: number of contacts performed during this campaign and for this client (numeric, includes last contact)
+#13 - pdays: number of days that passed by after the client was last contacted from a previous campaign (numeric; 999 means client was not previously contacted)
+#14 - previous: number of contacts performed before this campaign and for this client (numeric)
+#15 - poutcome: outcome of the previous marketing campaign (categorical: 'failure','nonexistent','success')
+
+# social and economic context attributes:
+#16 - emp.var.rate: employment variation rate - quarterly indicator (numeric)
+#17 - cons.price.idx: consumer price index - monthly indicator (numeric)
+#18 - cons.conf.idx: consumer confidence index - monthly indicator (numeric)
+#19 - euribor3m: euribor 3 month rate - daily indicator (numeric)
+#20 - nr.employed: number of employees - quarterly indicator (numeric)
+
+
+What year is it from? How was it collected? What should we know about this dataset as we read your writeup? (4pts)
+#Year: May 2008 to November 2010
+#Collecting method: 
+#direct marketing campaigns of a Portuguese banking institution
+#Something about the dataset as we need yo know: 
+#there is no N/A collected in the dataset
+
+
+
+## Research Question: 
+* Whether a client would subscribe a term debit marketing campaign?
+
+#I would like to choose Naïve Bayes classification to answer my research question, whether a client would subscribe a term deposit?
+#since whether A customer would buy the debit product is a binary question so it needs to adopt Naïve Bayes classification to help calssification.
+
+
+Using the data you chose and the algorithm you chose, read in your data and run your model. (6pts)
+x = marketing_df [['age','duration','campaign']]
+y = marketing_df[['y']]
+print(x)
+print(y)
+
+print(marketing_df.describe())
+
+np.random.seed(seed=13579)
+
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2,random_state=13579)
+
+
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+x_train = sc.fit_transform(x_train)
+x_test = sc.transform(x_test)
+
+
+from sklearn.naive_bayes import GaussianNB
+classifier = GaussianNB()
+classifier.fit(x_train, y_train)
+
+GaussianNB()
+
+y_pred  =  classifier.predict(x_test)
+y_pred  
+y_test
+
+
+
+#Tinker with parameters at least 3 times 
+#(changing learning rate, changing features, changing k like in KNN, etc).
+#You may tinker with the same kind of parameter 3 times, it doesn't have to be 3 different parameters. 
+#(example: you can just tinker with k. k=1, k=3, or k=8) 
+
+Changing different features to adjust Naïve Bayes classification, time 1(martial&job)
+
+# Import LabelEncoder
+from sklearn import preprocessing
+#creating labelEncoder
+le = preprocessing.LabelEncoder()
+# Converting string labels into numbers.
+marital_encoded=le.fit_transform(marketing_df['marital'])
+print (marital_encoded)
+marketing_df['marital']=marital_encoded
+
+
+# Import LabelEncoder
+from sklearn import preprocessing
+#creating labelEncoder
+le = preprocessing.LabelEncoder()
+# Converting string labels into numbers.
+job_encoded=le.fit_transform(marketing_df['job'])
+print (job_encoded)
+marketing_df['job']=job_encoded
+
+
+x1 = marketing_df [['age','marital','job']]
+y1 = marketing_df[['y']]
+print(x1)
+print(y1)
+
+
+np.random.seed(seed=13579)
+
+from sklearn.model_selection import train_test_split
+x1_train, x1_test, y1_train, y1_test = train_test_split(x1, y1, test_size=0.2,random_state=13579)
+
+
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+x1_train = sc.fit_transform(x1_train)
+x1_test = sc.transform(x1_test)
+
+from sklearn.naive_bayes import GaussianNB
+classifier = GaussianNB()
+classifier.fit(x_train, y_train)
+
+
+y1_pred  =  classifier.predict(x1_test)
+y1_pred
+y1_test
+
+
+Changing different features to adjust Naïve Bayes classification, time 2(housing&loan)
+
+# Import LabelEncoder
+from sklearn import preprocessing
+#creating labelEncoder
+le = preprocessing.LabelEncoder()
+# Converting string labels into numbers.
+housing_encoded=le.fit_transform(marketing_df['housing'])
+print (housing_encoded)
+marketing_df['housing']=housing_encoded
+
+# Import LabelEncoder
+from sklearn import preprocessing
+#creating labelEncoder
+le = preprocessing.LabelEncoder()
+# Converting string labels into numbers.
+loan_encoded=le.fit_transform(marketing_df['loan'])
+print (loan_encoded)
+marketing_df['loan']=loan_encoded
+
+x2 = marketing_df [['age','housing','loan']]
+y2 = marketing_df[['y']]
+print(x2)
+print(y2)
+
+np.random.seed(seed=13579)
+
+from sklearn.model_selection import train_test_split
+x2_train, x2_test, y2_train, y2_test = train_test_split(x2, y2, test_size=0.2,random_state=13579)
+
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+x2_train = sc.fit_transform(x2_train)
+x2_test = sc.transform(x2_test)
+
+from sklearn.naive_bayes import GaussianNB
+classifier = GaussianNB()
+classifier.fit(x2_train, y2_train)
+
+y2_pred  =  classifier.predict(x2_test)
+y2_pred  
+y2_test
+
+
+
+Changing different features to adjust Naïve Bayes classification, time 3
+
+# Import LabelEncoder
+from sklearn import preprocessing
+#creating labelEncoder
+le = preprocessing.LabelEncoder()
+# Converting string labels into numbers.
+contact_encoded=le.fit_transform(marketing_df['contact'])
+print (contact_encoded)
+marketing_df['contact']=contact_encoded
+
+# Import LabelEncoder
+from sklearn import preprocessing
+#creating labelEncoder
+le = preprocessing.LabelEncoder()
+# Converting string labels into numbers.
+month_encoded=le.fit_transform(marketing_df['month'])
+print (month_encoded)
+marketing_df['month']=month_encoded
+
+# Import LabelEncoder
+from sklearn import preprocessing
+#creating labelEncoder
+le = preprocessing.LabelEncoder()
+# Converting string labels into numbers.
+day_of_week_encoded=le.fit_transform(marketing_df['day_of_week'])
+print (day_of_week_encoded)
+marketing_df['day_of_week']=day_of_week_encoded
+
+x3 = marketing_df [['contact','month','day_of_week']]
+y3 = marketing_df[['y']]
+print(x3)
+print(y3)
+
+np.random.seed(seed=13579)
+
+from sklearn.model_selection import train_test_split
+x3_train, x3_test, y3_train, y3_test = train_test_split(x3, y3, test_size=0.2,random_state=13579)
+
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+x3_train = sc.fit_transform(x3_train)
+x3_test = sc.transform(x3_test)
+
+from sklearn.naive_bayes import GaussianNB
+classifier = GaussianNB()
+classifier.fit(x3_train, y3_train)
+
+y3_pred  =  classifier.predict(x3_test)
+y3_pred 
+y3_test
+
+##3) answer each of the prompts provided
+#Report the accuracy of your model. Either through RMSE or another metric. 
+#How did accuracy change with your parameter tinkering? (3pts)
+
+Feature0: age, marital, job(accuracy=89.23%)
+
+from sklearn.metrics import confusion_matrix,accuracy_score
+cm = confusion_matrix(y_test, y_pred)
+ac = accuracy_score(y_test,y_pred)
+
+cm
+ac
+
+Feature1: age, housing, loan(accuracy=88.74%)
+
+from sklearn.metrics import confusion_matrix,accuracy_score
+cm = confusion_matrix(y1_test, y1_pred)
+ac = accuracy_score(y1_test,y1_pred)
+
+cm
+ac
+
+Feature2: contact, month, day_of_week(accuracy=88.90%)
+
+from sklearn.metrics import confusion_matrix,accuracy_score
+cm = confusion_matrix(y2_test, y2_pred)
+ac = accuracy_score(y2_test,y2_pred)
+
+cm
+ac
+
+Feature3: contact, month, day_of_week(accuracy=89.08%)
+
+from sklearn.metrics import confusion_matrix,accuracy_score
+cm = confusion_matrix(y3_test, y3_pred)
+ac = accuracy_score(y3_test,y3_pred)
+
+cm
+ac
+
+#Create a visualization demonstrating your findings. Make sure to include a title and axis labels. 
+#Describe what's being shown in your visualization. (3pts)
+    
+
+from sklearn.metrics import confusion_matrix
+mat = confusion_matrix(y_test, y_pred)
+sns.heatmap(mat.T, square=True, annot=True, fmt='d', cbar=False)
+plt.xlabel('true label')
+plt.ylabel('predicted label')
+plt.title('confusion_matrix for Feature0: age, marital, job')
+
+In this visualization plot, we can see that the correct rate of prediction is  0.8923282350084972.
+
+import pandas as pd
+
+# Import LabelEncoder
+from sklearn import preprocessing
+#creating labelEncoder
+le = preprocessing.LabelEncoder()
+# Converting string labels into numbers.
+y_encoded=le.fit_transform(marketing_df['y'])
+print (y_encoded)
+marketing_df['y']=y_encoded
+
+marketing_table=marketing_df.pivot_table(index='marital', columns='job', values='y',aggfunc='mean')
+ax = sns.heatmap(marketing_table)
+
+plt.title('average possibility of subscribing a term deposit among marital and job ')
+
+In this visualization plot, we can see that in job 2,11 & marital 3, there is the most highest possibility to subscribe a term deposit. Besides, job 8 & marital 2,0, there is also the most highest possibility to subscribe a term deposit.
+
+#What challenges did you run into? Do you think it was because of the data, the model, the research question? 
+#How would you overcome these challenges? (4pts)
+
+Problem1: data type
+At first, I find that dealing with data type is a challening problem since some variables are character instead of decimal or interger. If those variables are not decimal or interger, it would be hard to predict the y, term debit.
+
+To solve this probelm, I apply a package from LabelEncoder to encode character into decimal or interger.
+
+#We learned a little bit about how our models can affect real people in the world. 
+#Name 2 potential benefits of your model and 2 potential harms. 
+#You can even look at the Wikipedia page on Algorithmic Bias (Links to an external site.) for inspiration. 
+#Every model has consequences, what can you think of? 
+#If your data is really not amenable to this question, simply write about any other example 
+#we covered in class, such as the Boston housing dataset or hate speech detectors. (6pts)
+
+2 Potential Benefits of applying Naive Bayes model to make prediction:
+1. It is easy and fast to predict data and can perform the prediction well.
+2. The bank can save much time on selecting target customers based on their past purchasing behaviors to make a loan prediction.
+
+2 Potential Harms of applying Naive Bayes model to make prediction:
+1. It has a limitation that the prediciots of Naive Bayes are independent but in real world, it is almost impossible to get a set of predictors which are completely independent
+2. The accuracy of Naive Bayes model is not accurate at all.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
